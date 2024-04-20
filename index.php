@@ -306,60 +306,100 @@ function print_index() : void
 
 echo <<<EOT
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-    <title>Filehost</title>
-    <meta name="description" content="Minimalistic service for sharing temporary files." />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>keep.mayq.dev</title>
+    <meta name="description" content="簡単にファイルをアップロード" />
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/destyle.css@1.0.15/destyle.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-<pre>
- === How To Upload ===
-You can upload files to this site via a simple HTTP POST, e.g. using curl:
-curl -F "file=@/path/to/your/file.jpg" $site_url
+<header class="mb-10 flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-4 dark:bg-neutral-800">
+  <nav class="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between" aria-label="Global">
+    <div class="flex items-center justify-between">
+      <a class="flex-none text-xl font-semibold dark:text-white" href="keep.mayq.dev">keep.mayq.dev</a>
+      <div class="sm:hidden">
+        <button type="button" class="hs-collapse-toggle p-2 inline-flex justify-center items-center gap-x-2 rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-transparent dark:border-neutral-700 dark:text-white dark:hover:bg-white/10" data-hs-collapse="#navbar-with-collapse" aria-controls="navbar-with-collapse" aria-label="Toggle navigation">
+          <svg class="hs-collapse-open:hidden flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
+          <svg class="hs-collapse-open:block hidden flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="max-w-[85rem] w-full mx-auto px-4 ">
+    <div class="mb-5 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70">
+    <div class="p-4 md:p-5">
+        <h3 class="text-lg font-bold text-gray-800 dark:text-white">
+        アップロード方法 (curl)
+        </h3>
+        <p>
+        <p class="mt-2 text-gray-500 dark:text-neutral-400">
+        このサイトにファイルをアップロードするには、簡単なHTTP POSTを使用します。例: curlを使用して<br />
+        <span class="min-h-[30px] inline-flex justify-center items-center py-1 px-1.5 bg-gray-200 font-mono text-sm text-gray-800 rounded-md dark:bg-neutral-700 dark:text-neutral-200">
+        curl -F "file=@/path/to/your/file.jpg" $site_url<br />
+        </span><br />
+        または、curlにパイプを使用してファイル拡張子を追加する場合は、"filename"を追加します:<br />
+        <span class="min-h-[30px] inline-flex justify-center items-center py-1 px-1.5 bg-gray-200 font-mono text-sm text-gray-800 rounded-md dark:bg-neutral-700 dark:text-neutral-200">
+        echo "hello" | curl -F "file=@-;filename=.txt" $site_url<br />
+        </span>
+        </p>
+    </div>
+    </div>
 
-Or if you want to pipe to curl *and* have a file extension, add a "filename":
-echo "hello" | curl -F "file=@-;filename=.txt" $site_url
-$length_info
-On Windows, you can use <a href="https://getsharex.com/">ShareX</a> and import <a href="$sharex_url">this</a> custom uploader.
-On Android, you can use an app called <a href="https://github.com/Rouji/Hupl">Hupl</a> with <a href="$hupl_url">this</a> uploader.
+    <div class="mb-5 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70">
+    <div class="p-4 md:p-5">
+        <h3 class="text-lg font-bold text-gray-800 dark:text-white">
+        アップロード方法 (その他)
+        </h3>
+        <p>
+        $length_info<br />
+        Windowsでは、<a href="https://getsharex.com/" class="text-rose-500 underline decoration-solid">ShareX</a>を使用して、<a href="$sharex_url" class="text-rose-500 underline decoration-solid">この</a>カスタムアップローダーをインポートできます。<br />
+        Androidでは、<a href="https://github.com/Rouji/Hupl" class="text-rose-500 underline decoration-solid">Hupl</a>と<a href="$hupl_url" class="text-rose-500 underline decoration-solid">この</a>アップローダーを使用できます。<br />
+        </p>
+    </div>
+    </div>
 
+    <div class="mb-5 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70">
+    <div class="p-4 md:p-5">
+        <h3 class="text-lg font-bold text-gray-800 dark:text-white">
+        Webからアップロード
+        </h3>
+        <form class="max-w-sm text-left" id="frm" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" id="file" class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 file:bg-gray-50 file:border-0 file:me-4 file:py-3 file:px-4 dark:file:bg-neutral-700 dark:file:text-neutral-400">
+            <input type="hidden" name="formatted" value="true" />
+            <button type="submit" class="mt-5 py-2 px-4 inline-flex items-center gap-x-4 text-sm font-semibold rounded-lg border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-white/10 dark:hover:bg-white/20 dark:text-white dark:hover:text-white">アップロード</button>
+        </form>
+    </div>
+    </div>
 
-Or simply choose a file and click "Upload" below:
-(Hint: If you're lucky, your browser may support drag-and-drop onto the file 
-selection input.)
-</pre>
-<form id="frm" method="post" enctype="multipart/form-data">
-<input type="file" name="file" id="file" />
-<input type="hidden" name="formatted" value="true" />
-<input type="submit" value="Upload"/>
-</form>
-<pre>
-
-
- === File Sizes etc. ===
-The maximum allowed file size is $max_size MiB.
-
-Files are kept for a minimum of $min_age, and a maximum of $max_age Days.
-
-How long a file is kept depends on its size. Larger files are deleted earlier 
-than small ones. This relation is non-linear and skewed in favour of small 
-files.
-
-The exact formula for determining the maximum age for a file is:
-
-MIN_AGE + (MAX_AGE - MIN_AGE) * (1-(FILE_SIZE/MAX_SIZE))^$decay
-
-
- === Source ===
-The PHP script used to provide this service is open source and available on 
-<a href="https://github.com/Rouji/single_php_filehost">GitHub</a>
-
-
- === Contact ===
-If you want to report abuse of this service, or have any other inquiries, 
-please write an email to $mail
-</pre>
+    <div class="mt-10 mb-3 bg-blue-50 border border-blue-500 text-sm text-gray-500 rounded-lg p-5 dark:bg-blue-600/10 dark:border-blue-700">
+        <div class="flex">
+            <svg class="flex-shrink-0 size-4 text-blue-600 mt-0.5 dark:text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 16v-4"></path>
+            <path d="M12 8h.01"></path>
+            </svg>
+            <div class="ms-3">
+            <h3 class="text-blue-600 font-semibold dark:font-medium dark:text-white">
+                ファイルについて
+            </h3>
+            <p class="mt-2 text-gray-800 dark:text-neutral-400">
+            アップロード可能なファイルは<span class="text-rose-500">最大$max_size MiB</span>です。<br />
+            ファイルは<span class="text-rose-500">最低$min_age</span>, <span class="text-rose-500">最高$max_age日間</span>保存されますが保存期間は一定ではなく、<span class="text-rose-500">ファイルサイズに基づき動的に定義されます</span>。<br />
+            保存期間は非線形であり、小さなファイルに有利になるように設定されています。<br /><br />
+            ファイルの最大保存期間を決定するための正確な式は次のとおりです:<br />
+            <span class="min-h-[30px] inline-flex justify-center items-center py-1 px-1.5 bg-gray-200 font-mono text-sm text-gray-800 rounded-md dark:bg-neutral-700 dark:text-neutral-200">
+            最小保存日数 + (最大保存日数 - 最小保存日数) * (1-(ファイルサイズ/最大ファイルサイズ))^$decay
+            </span>
+            </p>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
 EOT;
