@@ -51,15 +51,25 @@ location ~ /(.+)$ {
     root /path/to/webroot/files;
 }
 
-location = / {
+location / {
+    # First attempt to serve request as file, then
+    # as directory, then fall back to displaying a 404.
+    try_files $uri $uri/ =404;
+    
+    root /path/to/webroot;
+    index index.php;
+    
     include fastcgi_params;
     fastcgi_param HTTP_PROXY "";
     fastcgi_intercept_errors On;
     fastcgi_param SCRIPT_NAME index.php;
     fastcgi_param SCRIPT_FILENAME /path/to/webroot/index.php;
     fastcgi_param QUERY_STRING $query_string;
-    fastcgi_pass 127.0.0.1:9000;
-}
+    
+    if ($uri !~ ^/$) {
+        root /path/to/webroot/files;
+    }
+} 
 ```
 
 # Purging Old Files
